@@ -1,27 +1,27 @@
-const dino = document.getElementById("dino");
-const cactus = document.getElementById("cactus");
+const bot = document.getElementById("bot");
+const rock = document.getElementById("rock");
 
 function jump() {
-  if (dino.classList != "jump") {
-    dino.classList.add("jump");
+  if (bot.classList != "jump") {
+    bot.classList.add("jump");
 
     setTimeout(function () {
-      dino.classList.remove("jump");
+      bot.classList.remove("jump");
     }, 300);
   }
 }
 
 let isAlive = setInterval(function () {
-  // get current dino Y position
-  let dinoTop = parseInt(window.getComputedStyle(dino).getPropertyValue("top"));
+  // get current bot Y position
+  let botTop = parseInt(window.getComputedStyle(bot).getPropertyValue("top"));
 
-  // get current cactus X position
-  let cactusLeft = parseInt(
-    window.getComputedStyle(cactus).getPropertyValue("left")
+  // get current rock X position
+  let rockLeft = parseInt(
+    window.getComputedStyle(rock).getPropertyValue("left")
   );
 
   // detect collision
-  if (cactusLeft < 50 && cactusLeft > 0 && dinoTop >= 140) {
+  if (rockLeft < 50 && rockLeft > 0 && botTop >= 140) {
     // collision
     alert("Game Over!");
   }
