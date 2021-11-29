@@ -82,6 +82,18 @@ scene("game", ({ level, score }) => {
       player.jump(CURRENT_JUMP_FORCE)
     }
   })
+
+  /**
+  * Adding controls for audio 
+  */
+  let music = document.getElementById("music");
+  document.getElementById("music").loop = true;
+  function playAudio() {
+    music.play();
+  }
+  keyPress('right', () => {
+    playAudio();
+  })
 })
 
 scene('lose', () => {
