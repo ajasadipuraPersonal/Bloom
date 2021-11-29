@@ -1,13 +1,14 @@
 kaboom({
     global:true,
-    fullscreen: true,
+    width: 500,
+    height: 500,
     scale: 1,
     debug: true,
     clearColor: [0, 0, 0, 1],
 })
 
 // Speed identifiers
-const MOVE_SPEED = 120
+const MOVE_SPEED = 180
 const JUMP_FORCE = 360
 const BIG_JUMP_FORCE = 550
 let CURRENT_JUMP_FORCE = JUMP_FORCE
@@ -16,9 +17,8 @@ const ENEMY_SPEED = 20
 
 //Game logic
 let isJumping = true
-loadRoot('https://i.imgur.com/')
-loadSprite('ground', 'gkvIc0a.png')
-loadSprite('bot', 'LsfXnsu.png')
+loadSprite('ground', 'sprites/ground-dead.png')
+loadSprite('bot', 'sprites/bot2.png')
 
 
 
