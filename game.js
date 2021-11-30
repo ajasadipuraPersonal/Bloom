@@ -59,12 +59,6 @@ scene("game", ({ level, score }) => {
 
   gravity(2700);
 
-  player.action(() => {
-    if(player.grounded()) {
-      isJumping = false;
-    }
-  });
-
   keyDown('space', () => {
     if (player.grounded()) {
       player.jump(CURRENT_JUMP_FORCE);
