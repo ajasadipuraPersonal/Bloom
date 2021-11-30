@@ -1,87 +1,106 @@
 kaboom({
     global:true,
-    width: 500,
-    height: 500,
+    fullscreen: false,
     scale: 1,
+    width: 1000,
+    height: 600,
     debug: true,
     clearColor: [0, 0, 0, 1],
-})
+});
 
 // Speed identifiers
-const MOVE_SPEED = 180
-const JUMP_FORCE = 360
-const BIG_JUMP_FORCE = 550
-let CURRENT_JUMP_FORCE = JUMP_FORCE
-const FALL_DEATH = 400
-const ENEMY_SPEED = 20
+const MOVE_SPEED = 200;
+const JUMP_FORCE = 700;
+const BIG_JUMP_FORCE = 2000;
+let CURRENT_JUMP_FORCE = JUMP_FORCE;
+const FALL_DEATH = 400;
+const ENEMY_SPEED = 20;
 
 //Game logic
-let isJumping = true
-loadSprite('ground', 'sprites/ground-dead.png')
-loadSprite('bot', 'sprites/bot2.png')
+loadSprite('ground', 'sprites/ground-dead.png');
+loadSprite('bot', 'sprites/bot2.png');
+loadSprite('enemy', 'sprites/enemy.jpeg');
 
 
 
-scene("game", ({ level, score }) => {
-  layers(['bg', 'obj', 'ui'], 'obj')
-
-  const maps = [
+scene("game", ({ levelId, score } = {levelId: 0, score: 0}) => {
+  const MAPS = [
     [
-      '                                                                                ',
-      '                                                                                ',
-      '                                                                                ',
-      '                                                                                ',
-      '                                                                                ',
-      '                                                                                ',
-      '                                                                                ',
-      '                                                                                ',
-      '                                                                                ',
-      '================================================================================',
+      '                                      ',
+      '                                      ',
+      '                                      ',
+      '======================================',
     ],
-  ]
-
+  ];
+  
   const levelCfg = {
     width: 64,
     height: 64,
-    '=': [sprite('ground'), solid()],
-  }
+    pos: vec2(0, 200),
+    '=': () => [sprite('ground'),
+      area(),
+      solid()],
+  };
 
-  const gameLevel = addLevel(maps[level], levelCfg)
+  layers(['bg', 'obj', 'ui'], 'obj');
+
+  //addLevel(MAPS[levelId], levelCfg);
+  const level = addLevel(MAPS[levelId ?? 0], levelCfg);
+
 
   const player = add([
-    sprite('bot'), solid(),
-    pos(30, 0),
+    sprite('bot'),
+    solid(),
+    area(),
+    pos(200, 392),
     body(),
     origin('bot')
-  ])
+  ]);
 
   player.action(() => {
-    camPos(player.pos)
     if (player.pos.y >= 1000) {
-      go('lose')
+      go('lose');
     }
-  })
+  });
+  
+  player.onCollide("enemy", (enemy) => {
+    go('lose');
+  });
 
-  keyDown('left', () => {
-    player.move(-MOVE_SPEED, 0)
-  })
+  gravity(2000);
 
-  keyDown('right', () => {
-    player.move(MOVE_SPEED, 0)
-  })
-
-  player.action(() => {
-    if(player.grounded()) {
-      isJumping = false
-    }
-  })
-
-  keyPress('space', () => {
+  keyDown('space', () => {
     if (player.grounded()) {
-      isJumping = true
-      player.jump(CURRENT_JUMP_FORCE)
+      player.jump(CURRENT_JUMP_FORCE);
     }
-  })
+  });
+
+  /**
+   * Enemy control
+   */
+
+  function addObsticle() {
+    const enemy = add([
+      sprite('bot'),
+      solid(),
+      area(),
+      pos(1100, 300),
+      body(),
+      scale(0.5),
+      origin('center'),
+      "enemy",
+    ]);
+
+    enemy.action(() => {
+      enemy.move(-250, 0);
+    });
+  }
+
+  wait(3, () => {
+    loop(1.5, () => {
+      addObsticle();
+    }); 
+  });
 
   /**
   * Adding controls for audio 
@@ -89,15 +108,15 @@ scene("game", ({ level, score }) => {
   let music = document.getElementById("music");
   document.getElementById("music").loop = true;
   function playAudio() {
-    music.play();
+    //music.play();
   }
   keyPress('right', () => {
     playAudio();
   })
-})
+});
 
 scene('lose', () => {
   add([text("You Lose...")])
-})
+});
 
-start("game", { level: 0})
+go("game");
